@@ -1,52 +1,36 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { PlaneTakeoff, BellRing, Radar, CalendarX } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useReveal } from "@/hooks/use-reveal";
-
-export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Flight Price Notifier — 機票降價通知" },
-      {
-        name: "description",
-        content:
-          "設定台北出發的航線與目標價，機票降到目標價就寄 email 通知你。Set a route and a target price — we email you when the fare drops.",
-      },
-      { property: "og:title", content: "Flight Price Notifier — 機票降價通知" },
-      {
-        property: "og:description",
-        content: "設定航線與目標價，機票降價就通知你。Cancel anytime.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
-  component: Landing,
-});
+import { usePageMeta } from "@/lib/use-page-meta";
 
 const features = [
   {
     icon: Radar,
     title: "盯緊熱門航線",
     subtitle: "Always-on route watching",
-    body: "持續監控台北出發的熱門航線（東京、首爾），自動抓最低票價。",
+    body: "持續監控台北出發的熱門航線(東京、首爾),自動抓最低票價。",
   },
   {
     icon: BellRing,
     title: "達標自動通知",
     subtitle: "Target-price email alerts",
-    body: "低於你設定的目標價，就寄 email 提醒你，附上立即訂購連結。",
+    body: "低於你設定的目標價,就寄 email 提醒你,附上立即訂購連結。",
   },
   {
     icon: CalendarX,
     title: "隨時取消",
     subtitle: "Cancel anytime",
-    body: "月訂閱制，不想用隨時停，沒有綁約。",
+    body: "月訂閱制,不想用隨時停,沒有綁約。",
   },
 ];
 
-function Landing() {
+export default function Landing() {
+  usePageMeta(
+    "Flight Price Notifier — 機票降價通知",
+    "設定台北出發的航線與目標價,機票降到目標價就寄 email 通知你。Set a route and a target price — we email you when the fare drops.",
+  );
   const featureReveal = useReveal<HTMLDivElement>();
 
   return (
@@ -77,7 +61,7 @@ function Landing() {
               Flight Price Notifier
             </h1>
             <p className="animate-fade-up mt-6 text-xl font-medium sm:text-2xl">
-              設定航線與目標價，機票降價就通知你
+              設定航線與目標價,機票降價就通知你
             </p>
             <p className="animate-fade-up mt-3 text-base text-muted-foreground">
               Set a route and a target price — we email you when the fare drops.

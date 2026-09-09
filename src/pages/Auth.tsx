@@ -1,5 +1,5 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { PlaneTakeoff } from "lucide-react";
 import { toast } from "sonner";
 
@@ -8,28 +8,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
+import { usePageMeta } from "@/lib/use-page-meta";
 
-export const Route = createFileRoute("/auth")({
-  head: () => ({
-    meta: [
-      { title: "Sign in / 登入 — Flight Price Notifier" },
-      {
-        name: "description",
-        content: "登入或註冊 Flight Price Notifier，開始追蹤台北出發的機票價格。",
-      },
-      { property: "og:title", content: "Sign in / 登入 — Flight Price Notifier" },
-      {
-        property: "og:description",
-        content: "Sign in or create an account to track flight prices.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
-  component: AuthPage,
-});
+type AuthTab = "signin" | "signup";
 
-function AuthPage() {
+export default function Auth({ defaultTab = "signin" }: { defaultTab?: AuthTab }) {
+  usePageMeta(
+    "Sign in / 登入 — Flight Price Notifier",
+    "登入或註冊 Flight Price Notifier,開始追蹤台北出發的機票價格。",
+  );
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
@@ -37,11 +24,11 @@ function AuthPage() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: "/app", replace: true });
+      if (data.session) navigate("/app", { replace: true });
     });
   }, [navigate]);
 
-  async function handleSubmit(mode: "signin" | "signup", e: React.FormEvent) {
+  async function handleSubmit(mode: AuthTab, e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     const { error } =
@@ -60,7 +47,7 @@ function AuthPage() {
     }
     const { data } = await supabase.auth.getSession();
     if (data.session) {
-      navigate({ to: "/app", replace: true });
+      navigate("/app", { replace: true });
     } else {
       toast.success("請到 email 收信完成註冊確認。");
     }
@@ -79,7 +66,7 @@ function AuthPage() {
 
       <main className="flex flex-1 items-center justify-center px-5 pb-16">
         <div className="w-full max-w-md rounded-2xl border border-border bg-card p-6 sm:p-8">
-          <Tabs defaultValue="signin">
+          <Tabs defaultValue={defaultTab}>
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="signin">Sign in / 登入</TabsTrigger>
               <TabsTrigger value="signup">Sign up / 註冊</TabsTrigger>
